@@ -1,0 +1,27 @@
+# Environment variables & Secrets (CRITICAL: Do not commit!)
+.env
+.env.local
+*.env
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# SQLite Databases (created & seeded automatically)
+*.db
+*.sqlite3
+database/*.db
+
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Streamlit local config & secrets
+.streamlit/secrets.toml

@@ -50,11 +50,13 @@ class BaseLLMProvider(ABC):
         pass
 
 
+import config
+
 class OpenAIProvider(BaseLLMProvider):
     """OpenAI Provider (GPT-4o, GPT-4o-mini) with function calling and Vision support."""
 
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.getenv("OPENAI_API_KEY", "")
+        self.api_key = api_key or config.get_openai_api_key() or os.getenv("OPENAI_API_KEY", "")
         if not self.api_key:
             raise ValueError("OpenAI API Key is required for OpenAIProvider.")
         from openai import OpenAI
@@ -184,7 +186,7 @@ class GeminiProvider(BaseLLMProvider):
     """Google Gemini Provider (gemini-3.6-flash) using Google GenAI SDK."""
 
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.getenv("GEMINI_API_KEY", "")
+        self.api_key = api_key or config.get_gemini_api_key() or os.getenv("GEMINI_API_KEY", "")
         if not self.api_key:
             raise ValueError("Gemini API Key is required for GeminiProvider.")
         from google import genai

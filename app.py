@@ -235,14 +235,22 @@ if "messages" not in st.session_state:
         }
     ]
 
+# Synchronize Streamlit Secrets to environment variables
+config.sync_secrets_to_env()
+
+discovered_openai_key = config.get_openai_api_key()
+discovered_gemini_key = config.get_gemini_api_key()
+default_provider = config.get_default_provider()
+
 if "provider" not in st.session_state:
-    st.session_state.provider = config.DEFAULT_PROVIDER
+    st.session_state.provider = default_provider
 
-if "openai_api_key" not in st.session_state:
-    st.session_state.openai_api_key = config.OPENAI_API_KEY
+# Always ensure session state keys are populated from secrets if not manually set
+if not st.session_state.get("openai_api_key"):
+    st.session_state.openai_api_key = discovered_openai_key
 
-if "gemini_api_key" not in st.session_state:
-    st.session_state.gemini_api_key = config.GEMINI_API_KEY
+if not st.session_state.get("gemini_api_key"):
+    st.session_state.gemini_api_key = discovered_gemini_key
 
 if "selected_product_to_order" not in st.session_state:
     st.session_state.selected_product_to_order = None
@@ -267,6 +275,64 @@ with st.sidebar:
         💬 [**WhatsApp वर थेट संपर्क करा**](https://wa.me/{config.SHOP_WHATSAPP})
         """
     )
+
+    st.divider()
+
+    # AI Engine & API Status Configuration
+    with st.expander("⚙️ AI मॉडेल & सेटिंग्ज (AI Settings)", expanded=False):
+        has_openai = bool(st.session_state.openai_api_key or config.get_openai_api_key())
+        has_gemini = bool(st.session_state.gemini_api_key or config.get_gemini_api_key())
+
+        provider_options = ["openai", "gemini", "mock"]
+        provider_labels = {
+            "openai": "OpenAI (GPT-4o)",
+            "gemini": "Google Gemini",
+            "mock": "Offline / Demo Mode",
+        }
+        
+        current_idx = 0
+        if st.session_state.provider in provider_options:
+            current_idx = provider_options.index(st.session_state.provider)
+
+        selected_p = st.selectbox(
+            "AI Provider निवडा:",
+            options=provider_options,
+            index=current_idx,
+            format_func=lambda x: provider_labels.get(x, x),
+        )
+        st.session_state.provider = selected_p
+
+        if selected_p == "openai":
+            if has_openai:
+                st.success("🟢 OpenAI Key कनेक्टेड आहे (Secrets/Env)")
+            else:
+                st.warning("⚠️ OpenAI Key आढळली नाही")
+            
+            custom_key = st.text_input(
+                "OpenAI API Key (Override/Manual):",
+                value=st.session_state.openai_api_key,
+                type="password",
+                placeholder="sk-proj-...",
+                help="Streamlit Secrets किंवा .env मधील की आपोआप वापरली जाते. हवी असल्यास येथे मॅन्युअल टाका.",
+            )
+            if custom_key != st.session_state.openai_api_key:
+                st.session_state.openai_api_key = custom_key
+        elif selected_p == "gemini":
+            if has_gemini:
+                st.success("🟢 Gemini Key कनेक्टेड आहे (Secrets/Env)")
+            else:
+                st.warning("⚠️ Gemini Key आढळली नाही")
+
+            custom_g_key = st.text_input(
+                "Gemini API Key (Override/Manual):",
+                value=st.session_state.gemini_api_key,
+                type="password",
+                placeholder="AIzaSy...",
+            )
+            if custom_g_key != st.session_state.gemini_api_key:
+                st.session_state.gemini_api_key = custom_g_key
+        else:
+            st.info("💡 ऑफलाइन / डेमो मोड सक्रिय आहे.")
 
     st.divider()
 
@@ -558,13 +624,14 @@ if user_input:
     # 2. Invoke Core Agent
     with st.chat_message("assistant", avatar="🌱"):
         with st.spinner("कृषी सल्लागार विश्लेषण करत आहे... (Analyzing...)"):
+            active_key = (
+                (st.session_state.openai_api_key or config.get_openai_api_key())
+                if st.session_state.provider == "openai"
+                else (st.session_state.gemini_api_key or config.get_gemini_api_key())
+            )
             agent = CoreAgent(
                 provider_name=st.session_state.provider,
-                api_key=(
-                    st.session_state.openai_api_key
-                    if st.session_state.provider == "openai"
-                    else st.session_state.gemini_api_key
-                ),
+                api_key=active_key,
             )
 
             # Filter messages to pass to agent
@@ -577,11 +644,7 @@ if user_input:
                 messages=chat_history,
                 image_bytes=image_bytes,
                 provider_name=st.session_state.provider,
-                api_key=(
-                    st.session_state.openai_api_key
-                    if st.session_state.provider == "openai"
-                    else st.session_state.gemini_api_key
-                ),
+                api_key=active_key,
             )
 
             # Display response text

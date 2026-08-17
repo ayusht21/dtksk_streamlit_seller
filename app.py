@@ -85,103 +85,109 @@ st.markdown(
         border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
-    /* Product Card Styling */
+    /* Product Card Styling (Theme-proof with high-contrast text) */
     .product-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 14px;
-        padding: 16px 18px;
-        margin-top: 12px;
-        margin-bottom: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 14px !important;
+        padding: 16px 18px !important;
+        margin-top: 12px !important;
+        margin-bottom: 12px !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
     }
     
     .product-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(6, 95, 70, 0.08);
-        border-color: #a7f3d0;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 20px rgba(6, 95, 70, 0.12) !important;
+        border-color: #10b981 !important;
     }
     
     .product-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 8px;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+        margin-bottom: 8px !important;
     }
     
-    .product-name {
-        font-size: 17px;
-        font-weight: 700;
-        color: #0f172a;
-        margin: 0;
+    .product-name,
+    .product-card .product-name,
+    .product-card h3,
+    div.product-name {
+        font-size: 18px !important;
+        font-weight: 800 !important;
+        color: #0f172a !important;
+        margin: 4px 0 !important;
+        line-height: 1.35 !important;
+        text-shadow: none !important;
     }
     
     .brand-pill {
-        background: #f1f5f9;
-        color: #475569;
-        padding: 2px 8px;
-        border-radius: 6px;
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
+        background: #f1f5f9 !important;
+        color: #334155 !important;
+        padding: 3px 10px !important;
+        border-radius: 6px !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        border: 1px solid #cbd5e1 !important;
     }
     
     .category-badge {
-        display: inline-block;
-        background: #ecfdf5;
-        color: #047857;
-        font-size: 12px;
-        font-weight: 600;
-        padding: 3px 10px;
-        border-radius: 12px;
-        margin-bottom: 8px;
-        border: 1px solid #a7f3d0;
+        display: inline-block !important;
+        background: #ecfdf5 !important;
+        color: #047857 !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        padding: 3px 10px !important;
+        border-radius: 12px !important;
+        margin-bottom: 6px !important;
+        border: 1px solid #a7f3d0 !important;
     }
     
     .product-info-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        margin-top: 8px;
-        font-size: 13px;
-        color: #334155;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+        margin-top: 8px !important;
+        font-size: 13px !important;
+        color: #1e293b !important;
     }
     
     .product-price-box {
-        display: flex;
-        align-items: baseline;
-        gap: 8px;
-        margin-top: 10px;
-        padding-top: 8px;
-        border-top: 1px dashed #e2e8f0;
+        display: flex !important;
+        align-items: baseline !important;
+        gap: 8px !important;
+        margin-top: 10px !important;
+        padding-top: 10px !important;
+        border-top: 1px dashed #cbd5e1 !important;
     }
     
     .product-price {
-        font-size: 20px;
-        font-weight: 700;
-        color: #065f46;
+        font-size: 22px !important;
+        font-weight: 800 !important;
+        color: #047857 !important;
     }
     
     .product-mrp {
-        font-size: 13px;
-        color: #94a3b8;
-        text-decoration: line-through;
+        font-size: 13px !important;
+        color: #94a3b8 !important;
+        text-decoration: line-through !important;
     }
     
     .stock-badge-in {
-        color: #059669;
-        font-weight: 600;
-        font-size: 12px;
-        display: flex;
-        align-items: center;
-        gap: 4px;
+        color: #059669 !important;
+        font-weight: 700 !important;
+        font-size: 12.5px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
     }
     
     .stock-badge-out {
-        color: #dc2626;
-        font-weight: 600;
-        font-size: 12px;
+        color: #dc2626 !important;
+        font-weight: 700 !important;
+        font-size: 12.5px !important;
     }
     
     /* Quick prompt button style */
@@ -372,9 +378,9 @@ if st.session_state.selected_product_to_order:
     with st.container():
         st.markdown(
             f"""
-            <div class="order-success-box">
-                <h4 style="margin: 0 0 8px 0; color: #065f46;">🛒 ऑर्डर आरक्षण: {prod_data['product_name']}</h4>
-                <p style="margin: 0; font-size: 14px;">पॅक: <strong>{prod_data['pack_size']}</strong> | किंमत: <strong>₹{prod_data['price']}</strong> | उपलब्ध स्टॉक: <strong>{prod_data['stock']} नग</strong></p>
+            <div class="order-success-box" style="background: #ecfdf5 !important; border: 1.5px solid #10b981 !important; border-radius: 12px; padding: 16px; margin: 14px 0;">
+                <div style="margin: 0 0 8px 0; font-size: 17px; font-weight: 800; color: #065f46 !important;">🛒 ऑर्डर आरक्षण: {prod_data['product_name']}</div>
+                <p style="margin: 0; font-size: 14px; color: #065f46 !important;">पॅक: <strong>{prod_data['pack_size']}</strong> | किंमत: <strong>₹{prod_data['price']}</strong> | उपलब्ध स्टॉक: <strong>{prod_data['stock']} नग</strong></p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -454,26 +460,28 @@ def render_product_card(product: dict, key_prefix: str):
 
     st.markdown(
         f"""
-        <div class="product-card">
-            <div class="product-header">
+        <div class="product-card" style="background: #ffffff !important; border: 1.5px solid #cbd5e1 !important; border-radius: 14px !important; padding: 18px !important; box-shadow: 0 4px 14px rgba(0,0,0,0.08) !important; margin: 12px 0 !important;">
+            <div class="product-header" style="display: flex !important; justify-content: space-between !important; align-items: flex-start !important; margin-bottom: 8px !important;">
                 <div>
-                    <span class="category-badge">{category}</span>
-                    <h3 class="product-name">{prod_name}</h3>
+                    <span class="category-badge" style="display: inline-block !important; background: #ecfdf5 !important; color: #047857 !important; font-size: 12px !important; font-weight: 600 !important; padding: 3px 10px !important; border-radius: 12px !important; border: 1px solid #a7f3d0 !important; margin-bottom: 6px !important;">{category}</span>
+                    <div class="product-name" style="font-size: 18px !important; font-weight: 800 !important; color: #0f172a !important; margin: 4px 0 6px 0 !important; line-height: 1.35 !important; text-shadow: none !important;">
+                        {prod_name}
+                    </div>
                 </div>
-                <span class="brand-pill">{brand}</span>
+                <span class="brand-pill" style="background: #f1f5f9 !important; color: #334155 !important; padding: 3px 10px !important; border-radius: 6px !important; font-size: 11px !important; font-weight: 700 !important; text-transform: uppercase !important; border: 1px solid #cbd5e1 !important;">{brand}</span>
             </div>
-            <div style="font-size: 13px; color: #475569; margin-bottom: 6px;">
-                <strong>घटक (Active):</strong> {active_ing}
+            <div style="font-size: 13.5px !important; color: #1e293b !important; margin-bottom: 6px !important; line-height: 1.4 !important;">
+                <strong style="color: #0f172a !important;">घटक (Active):</strong> <span style="color: #334155 !important;">{active_ing}</span>
             </div>
-            <div style="font-size: 12px; color: #64748b;">
-                <strong>शिफारस पिके:</strong> {crops} | <strong>प्रमाण:</strong> {dosage}
+            <div style="font-size: 12.5px !important; color: #475569 !important; margin-bottom: 8px !important; line-height: 1.4 !important;">
+                <strong style="color: #0f172a !important;">शिफारस पिके:</strong> <span style="color: #475569 !important;">{crops}</span> | <strong style="color: #0f172a !important;">प्रमाण:</strong> <span style="color: #475569 !important;">{dosage}</span>
             </div>
-            <div class="product-price-box">
-                <span class="product-price">₹{price:.0f}</span>
-                <span class="product-mrp">₹{mrp:.0f} MRP</span>
-                <span style="font-size: 13px; color: #64748b;">({pack_size})</span>
-                <span style="margin-left: auto;">
-                    {"<span class='stock-badge-in'>🟢 स्टॉकमध्ये उपलब्ध (" + str(stock) + " नग)</span>" if in_stock else "<span class='stock-badge-out'>🔴 संपले आहे (Out of stock)</span>"}
+            <div class="product-price-box" style="display: flex !important; align-items: baseline !important; gap: 8px !important; margin-top: 10px !important; padding-top: 10px !important; border-top: 1px dashed #cbd5e1 !important;">
+                <span class="product-price" style="font-size: 22px !important; font-weight: 800 !important; color: #047857 !important;">₹{price:.0f}</span>
+                <span class="product-mrp" style="font-size: 13px !important; color: #94a3b8 !important; text-decoration: line-through !important;">₹{mrp:.0f} MRP</span>
+                <span style="font-size: 13px !important; color: #475569 !important; font-weight: 500 !important;">({pack_size})</span>
+                <span style="margin-left: auto !important;">
+                    {"<span class='stock-badge-in' style='color: #059669 !important; font-weight: 700 !important; font-size: 12.5px !important;'>🟢 स्टॉकमध्ये उपलब्ध (" + str(stock) + " नग)</span>" if in_stock else "<span class='stock-badge-out' style='color: #dc2626 !important; font-weight: 700 !important; font-size: 12.5px !important;'>🔴 संपले आहे (Out of stock)</span>"}
                 </span>
             </div>
         </div>

@@ -290,18 +290,34 @@ with st.sidebar:
     st.divider()
 
     # View Active Orders in Shop
-    with st.expander("📋 Live Orders / नोंदवलेल्या ऑर्डर्स", expanded=False):
-        recent_orders = OrderService.list_orders(limit=10)
-        if recent_orders:
-            for ord_item in recent_orders:
+    all_orders = OrderService.list_orders(limit=25)
+    order_count = len(all_orders)
+    with st.expander(f"📋 Live Orders / नोंदवलेल्या ऑर्डर्स ({order_count})", expanded=(order_count > 0)):
+        if all_orders:
+            for ord_item in all_orders:
+                farmer_clean_phone = "".join(filter(str.isdigit, ord_item['farmer_phone']))
+                farmer_wa_text = urllib.parse.quote(
+                    f"रामराम {ord_item['farmer_name']} जी, आपली दत्त कृषी सेवा केंद्र, काटोल मधील ऑर्डर ({ord_item['order_id']}) - {ord_item['product_name']} ({ord_item['pack_size']}) x {ord_item['quantity']} - ₹{ord_item['total_price']} दुकानात तयार आहे."
+                )
+                wa_farmer_url = f"https://wa.me/{farmer_clean_phone}?text={farmer_wa_text}" if farmer_clean_phone else None
+                
                 st.markdown(
                     f"""
-                    **{ord_item['order_id']}**  
-                    👤 {ord_item['farmer_name']} ({ord_item['farmer_village'] or 'काटोल'})  
-                    🌾 {ord_item['product_name']} x {ord_item['quantity']} ({ord_item['pack_size']})  
-                    💰 **₹{ord_item['total_price']}** | Status: `{ord_item['status']}`  
-                    <small>{ord_item['created_at']}</small>
-                    <hr style="margin: 6px 0;">
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 8px;">
+                        <div style="font-weight: 700; color: #0f172a; font-size: 13px;">🔖 {ord_item['order_id']}</div>
+                        <div style="font-size: 13px; color: #1e293b; margin-top: 2px;">
+                            👤 <strong>{ord_item['farmer_name']}</strong> ({ord_item['farmer_village'] or 'काटोल'})
+                        </div>
+                        <div style="font-size: 12px; color: #475569;">📞 <a href="tel:{ord_item['farmer_phone']}" style="color:#0369a1; text-decoration:none;">{ord_item['farmer_phone']}</a></div>
+                        <div style="font-size: 13px; color: #047857; font-weight: 600; margin-top: 4px;">
+                            🌾 {ord_item['product_name']} x {ord_item['quantity']} ({ord_item['pack_size']})
+                        </div>
+                        <div style="font-size: 13px; font-weight: 700; color: #0f172a;">
+                            💰 ₹{ord_item['total_price']:.0f} &bull; <span style="font-size: 11px; color: #0284c7; background: #e0f2fe; padding: 2px 6px; border-radius: 4px;">{ord_item['status']}</span>
+                        </div>
+                        <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">⏰ {ord_item['created_at']}</div>
+                        {f'<div style="margin-top: 6px;"><a href="{wa_farmer_url}" target="_blank" style="text-decoration:none;"><button style="width:100%; height:28px; background-color:#25D366; color:white; border:none; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer;">💬 शेतकऱ्यास WhatsApp मेसेज करा</button></a></div>' if wa_farmer_url else ''}
+                    </div>
                     """,
                     unsafe_allow_html=True,
                 )

@@ -101,3 +101,14 @@ class OrderService:
         with get_db() as db:
             order = db.query(Order).filter(Order.order_id == order_id.strip()).first()
             return order.to_dict() if order else None
+
+    @staticmethod
+    def update_order_status(order_id: str, new_status: str) -> bool:
+        """Updates the status of an existing order."""
+        with get_db() as db:
+            order = db.query(Order).filter(Order.order_id == order_id.strip()).first()
+            if order:
+                order.status = new_status
+                db.flush()
+                return True
+            return False

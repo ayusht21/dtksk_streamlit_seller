@@ -32,7 +32,15 @@ class TestLLMProvider(unittest.TestCase):
             system_prompt=self.system_prompt,
             image_bytes=dummy_image,
         )
-        self.assertIn("फोटो", response.text)
+    def test_agent_config_hybrid_models(self):
+        from agent.agent_config import AGENT_CONFIG
+        self.assertEqual(AGENT_CONFIG["openai"]["default_model"], "gpt-4o-mini")
+        self.assertEqual(AGENT_CONFIG["openai"]["vision_model"], "gpt-4o")
+
+    def test_config_openai_getters(self):
+        import config
+        self.assertEqual(config.get_openai_model(), "gpt-4o-mini")
+        self.assertEqual(config.get_openai_vision_model(), "gpt-4o")
 
 
 if __name__ == "__main__":

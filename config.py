@@ -94,7 +94,10 @@ def get_openai_api_key() -> str:
     return get_config_value("OPENAI_API_KEY", "")
 
 def get_openai_model() -> str:
-    return get_config_value("OPENAI_MODEL", "gpt-4o")
+    return get_config_value("OPENAI_MODEL", "gpt-4o-mini")
+
+def get_openai_vision_model() -> str:
+    return get_config_value("OPENAI_VISION_MODEL", "gpt-4o")
 
 def get_gemini_api_key() -> str:
     return get_config_value("GEMINI_API_KEY", "") or get_config_value("GOOGLE_API_KEY", "")
@@ -120,6 +123,7 @@ def get_database_url() -> str:
 DATABASE_URL = get_database_url()
 OPENAI_API_KEY = get_openai_api_key()
 OPENAI_DEFAULT_MODEL = get_openai_model()
+OPENAI_VISION_MODEL = get_openai_vision_model()
 GEMINI_API_KEY = get_gemini_api_key()
 GEMINI_DEFAULT_MODEL = get_gemini_model()
 DEFAULT_PROVIDER = get_default_provider()

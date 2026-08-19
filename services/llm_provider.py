@@ -69,7 +69,16 @@ class OpenAIProvider(BaseLLMProvider):
         image_bytes: Optional[bytes] = None,
         model: Optional[str] = None,
     ) -> ProviderResponse:
-        target_model = model or AGENT_CONFIG["openai"]["default_model"]
+        # Dynamic Hybrid Model Routing:
+        # Route to high-precision vision model (gpt-4o) for crop disease image diagnosis,
+        # and fast, cost-effective model (gpt-4o-mini) for all text/catalog/order interactions.
+        if model:
+            target_model = model
+        elif image_bytes:
+            target_model = AGENT_CONFIG.get("openai", {}).get("vision_model", "gpt-4o")
+        else:
+            target_model = AGENT_CONFIG.get("openai", {}).get("default_model", "gpt-4o-mini")
+
         temperature = AGENT_CONFIG["openai"]["temperature"]
         max_tool_iterations = AGENT_CONFIG["max_tool_iterations"]
 
@@ -78,12 +87,15 @@ class OpenAIProvider(BaseLLMProvider):
             {"role": "system", "content": system_prompt}
         ]
 
-        for idx, msg in enumerate(messages):
+        # Use recent message window to prevent token explosion in long chats
+        recent_messages = messages[-14:] if len(messages) > 14 else messages
+
+        for idx, msg in enumerate(recent_messages):
             role = msg.get("role", "user")
             content = msg.get("content", "")
 
             # If it's the latest user message and image_bytes are present, construct multimodal payload
-            if role == "user" and idx == len(messages) - 1 and image_bytes:
+            if role == "user" and idx == len(recent_messages) - 1 and image_bytes:
                 base64_image = base64.b64encode(image_bytes).decode("utf-8")
                 content_payload = [
                     {"type": "text", "text": content or "Please analyze this crop image for pests, diseases, or symptoms."},

@@ -6,7 +6,8 @@ from typing import Dict, Any
 
 AGENT_CONFIG: Dict[str, Any] = {
     "openai": {
-        "default_model": "gpt-4o",
+        "default_model": "gpt-4o-mini",
+        "vision_model": "gpt-4o",
         "fallback_model": "gpt-4o-mini",
         "temperature": 0.3,
         "max_tokens": 1500,
